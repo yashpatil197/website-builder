@@ -1,0 +1,31 @@
+/* Custom Scrollbars */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+/* AI Generation Loading Animation */
+.generating {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .5; }
+}
+
+/* Editable Area Highlighting */
+[contenteditable="true"]:hover {
+    outline: 2px dashed #3b82f6;
+    outline-offset: 4px;
+    cursor: text;
+}
+
+/* Mobile Toggle Simulation */
+#site-preview.mobile-view {
+    max-width: 375px;
+    transition: max-width 0.3s ease;
+}
+
+/* Dashboard Cards */
+.stat-card {
+    @apply bg-white p-6 rounded-xl border border-slate-200 shadow-sm;
+}
