@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoSite AI | Generate, Edit, Publish</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+
+    <div id="auth-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full">
+            <h2 id="modal-title" class="text-2xl font-bold mb-4">Start Your 30-Day Free Trial</h2>
+            <div id="auth-form" class="space-y-4">
+                <input type="email" placeholder="Email Address" class="w-full p-3 border rounded-lg">
+                <input type="password" placeholder="Password" class="w-full p-3 border rounded-lg">
+                <button onclick="handleSignup()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">Create Account</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="border-b bg-white/80 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2 font-bold text-xl text-blue-600">
+                <i data-lucide="zap"></i> AutoSite AI
+            </div>
+            <div class="flex items-center gap-4">
+                <span id="trial-badge" class="hidden px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">29 DAYS LEFT</span>
+                <button onclick="showDashboard()" class="text-slate-600 hover:text-blue-600">Dashboard</button>
+                <button onclick="openAuth()" class="bg-slate-900 text-white px-4 py-2 rounded-lg hover:bg-slate-800">Get Started</button>
+            </div>
+        </div>
+    </nav>
+
+    <main id="view-container">
+        <section id="hero-view" class="py-20 px-4 text-center">
+            <h1 class="text-6xl font-extrabold tracking-tight mb-6">Your business online in <span class="text-blue-600">seconds.</span></h1>
+            <p class="text-xl text-slate-600 mb-10 max-w-2xl mx-auto">Describe your site, and our AI will build a high-conversion, responsive website with a built-in editor and global CDN hosting.</p>
+            <div class="max-w-xl mx-auto flex gap-2 p-2 bg-white rounded-2xl shadow-xl border">
+                <input id="ai-prompt" type="text" placeholder="A modern dental clinic with online booking..." class="flex-1 px-4 outline-none">
+                <button onclick="generateSite()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2">
+                    Build My Site <i data-lucide="sparkles" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="editor-view" class="hidden flex h-[calc(100vh-64px)]">
+            <aside class="w-64 border-r bg-white p-4 flex flex-col gap-6">
+                <div>
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Components</h3>
+                    <div class="space-y-2">
+                        <div class="p-3 border rounded-lg cursor-move bg-slate-50 hover:bg-blue-50">Header Section</div>
+                        <div class="p-3 border rounded-lg cursor-move bg-slate-50 hover:bg-blue-50">Features Grid</div>
+                        <div class="p-3 border rounded-lg cursor-move bg-slate-50 hover:bg-blue-50">Pricing Table</div>
+                    </div>
+                </div>
+                <div class="mt-auto">
+                    <button onclick="publishSite()" class="w-full bg-green-600 text-white py-2 rounded-lg font-bold mb-2">Publish</button>
+                    <button class="w-full border py-2 rounded-lg text-slate-600">Settings</button>
+                </div>
+            </aside>
+            <div id="canvas" class="flex-1 bg-slate-200 p-8 overflow-y-auto">
+                <div id="site-preview" class="bg-white shadow-2xl min-h-full mx-auto max-w-5xl rounded-t-lg overflow-hidden">
+                    </div>
+            </div>
+
+<div class="max-w-5xl mx-auto py-12 px-4">
+    <h2 class="text-3xl font-bold mb-8 text-center">Upgrade Your Plan</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-8 rounded-2xl border hover:border-blue-500 transition cursor-pointer" onclick="redirectToCheckout('starter')">
+            <h3 class="font-bold text-xl mb-2">Starter</h3>
+            <div class="text-4xl font-black mb-4">$19<span class="text-sm font-normal text-slate-400">/mo</span></div>
+            <ul class="space-y-3 mb-8 text-slate-600">
+                <li><i data-lucide="check" class="inline w-4 h-4 text-green-500"></i> 1 Website</li>
+                <li><i data-lucide="check" class="inline w-4 h-4 text-green-500"></i> AutoSite Subdomain</li>
+            </ul>
+            <button class="w-full py-3 rounded-lg border-2 border-slate-900 font-bold hover:bg-slate-900 hover:text-white transition">Select Plan</button>
+        </div>
+        <div class="bg-slate-900 text-white p-8 rounded-2xl border-4 border-blue-500 relative transform scale-105 shadow-2xl" onclick="redirectToCheckout('pro')">
+            <span class="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-4 py-1 rounded-full text-xs font-bold">MOST POPULAR</span>
+            <h3 class="font-bold text-xl mb-2">Pro</h3>
+            <div class="text-4xl font-black mb-4">$49<span class="text-sm font-normal text-slate-400">/mo</span></div>
+            <ul class="space-y-3 mb-8 text-slate-300">
+                <li><i data-lucide="check" class="inline w-4 h-4 text-blue-400"></i> 5 Websites</li>
+                <li><i data-lucide="check" class="inline w-4 h-4 text-blue-400"></i> Custom Domains</li>
+                <li><i data-lucide="check" class="inline w-4 h-4 text-blue-400"></i> No AutoSite Branding</li>
+            </ul>
+            <button class="w-full py-3 rounded-lg bg-blue-600 font-bold hover:bg-blue-500 transition">Go Pro</button>
+        </div>
+    </div>
+</div>
+ </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
