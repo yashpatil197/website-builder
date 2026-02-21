@@ -150,6 +150,71 @@ function renderEditor(data) {
             htmlContent += renderFeatureSection(section.items);
         }
     });
+    // Extend the global state
+state.isVerified = false; 
+
+// --- Verification Logic ---
+
+function sendVerification() {
+    const email = document.getElementById('reg-email').value;
+    if (!email.includes('@')) return alert("Please enter a valid email.");
+    
+    state.user = { email: email };
+    document.getElementById('display-email').innerText = email;
+    
+    // Switch UI steps
+    document.getElementById('auth-step-1').classList.add('hidden');
+    document.getElementById('auth-step-2').classList.remove('hidden');
+}
+
+function simulateEmailVerify() {
+    // In production, this happens when the user clicks the link in their email
+    // which hits an API endpoint like /api/auth/verify?token=...
+    state.isVerified = true;
+    state.trialEndDate = new Date(new Date().setDate(new Date().getDate() + 30));
+    
+    alert("Email verified successfully! You can now generate your site.");
+    document.getElementById('auth-modal').classList.add('hidden');
+    
+    // Update UI
+    document.getElementById('trial-badge').classList.remove('hidden');
+    lucide.createIcons();
+}
+
+// --- The Guarded Generation Function ---
+
+async function generateSite() {
+    // SECURITY CHECK: Guard the AI Engine
+    if (!state.user || !state.isVerified) {
+        openAuth(); // Force the modal
+        const statusMsg = !state.user ? "Please sign up first." : "Please verify your email to continue.";
+        alert(statusMsg);
+        return;
+    }
+
+    const prompt = document.getElementById('ai-prompt').value;
+    if (!prompt) return alert("Please describe your business.");
+
+    // Proceed with Generation...
+    document.getElementById('view-container').innerHTML = `
+        <div class="flex flex-col items-center justify-center h-96">
+            <div class="generating text-blue-600 mb-4"><i data-lucide="loader" class="w-12 h-12 animate-spin"></i></div>
+            <p class="text-xl font-medium">AI is designing your layout...</p>
+        </div>
+    `;
+    
+    // Simulating API call delay
+    setTimeout(() => {
+        const mockAIResponse = {
+            theme: { primary: "#2563eb" },
+            sections: [
+                { type: 'hero', content: { title: prompt.toUpperCase(), sub: "Verified & AI-Generated Content" } },
+                { type: 'features', items: ["Verified Analytics", "Secure Hosting", "Fast CDN"] }
+            ]
+        };
+        renderEditor(mockAIResponse);
+    }, 1500);
+}
 
     preview.innerHTML = htmlContent;
     lucide.createIcons(); // Re-initialize icons for the new content
